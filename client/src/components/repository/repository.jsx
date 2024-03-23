@@ -1,23 +1,31 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { format, formatDistanceToNow } from 'date-fns';
 
 import Box from '@mui/material/Box';
+import Menu from '@mui/material/Menu';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
+import MenuItem from '@mui/material/MenuItem';
+import StarIcon from '@mui/icons-material/Star';
+import IconButton from '@mui/material/IconButton';
 import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
-import CardContent from '@mui/material/CardContent';
-
-
-// eslint-disable-next-line perfectionist/sort-imports
-import StarIcon from '@mui/icons-material/Star';
+import ShareIcon from '@mui/icons-material/Share';
 import TodayIcon from '@mui/icons-material/Today';
+import CardContent from '@mui/material/CardContent';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ForkRightIcon from '@mui/icons-material/ForkRight';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 const RepositoryCard = ({
   full_name = '',
@@ -39,6 +47,14 @@ const RepositoryCard = ({
   const formattedUpdatedAt = format(new Date(updated_at), 'MMM dd, yyyy');
   const totalLinesOfCode = Object.values(languageData).reduce((a, b) => a + b, 0);
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <Card>
@@ -119,6 +135,32 @@ const RepositoryCard = ({
               </Box>
             )}
           </Stack>
+        </Stack>
+      </CardContent>
+      <CardContent>
+        <Stack direction="row">
+          <IconButton>
+            <ShareIcon />
+          </IconButton>
+          <IconButton>
+            <BookmarkIcon />
+          </IconButton>
+          <IconButton>
+            <ChatBubbleOutlineIcon />
+          </IconButton>
+          <IconButton>
+            <ThumbUpIcon />
+          </IconButton>
+          <IconButton onClick={handleClick}>
+            <MoreHorizIcon />
+          </IconButton>
+          <Button variant="text" endIcon={<ExpandCircleDownIcon />}>
+            Details
+          </Button>
+          <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+            <MenuItem onClick={handleClose}>Option 1</MenuItem>
+            <MenuItem onClick={handleClose}>Option 2</MenuItem>
+          </Menu>
         </Stack>
       </CardContent>
     </Card>
