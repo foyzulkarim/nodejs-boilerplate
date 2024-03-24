@@ -1,4 +1,4 @@
-import RepositoryCard from './repository';
+import RepositoryCard from './repository-card';
 
 export default {
   title: 'gitstream/components/Repository',
