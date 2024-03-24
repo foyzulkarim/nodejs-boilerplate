@@ -9,7 +9,6 @@ import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
 import StarIcon from '@mui/icons-material/Star';
@@ -18,14 +17,15 @@ import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
 import ShareIcon from '@mui/icons-material/Share';
 import TodayIcon from '@mui/icons-material/Today';
+import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ForkRightIcon from '@mui/icons-material/ForkRight';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+
 
 const RepositoryCard = ({
   full_name = '',
@@ -57,7 +57,7 @@ const RepositoryCard = ({
   };
 
   return (
-    <Card>
+    <Card variant="outlined">
       <CardHeader
         avatar={<Avatar src={owner.avatar_url} />}
         title={full_name}
@@ -65,23 +65,25 @@ const RepositoryCard = ({
       />
 
       <CardContent>
-        <Stack spacing={2}>
-          <Stack>
+        <Stack spacing={2} flexWrap="wrap">
+          <Stack flexWrap="wrap">
             <Typography variant="body2" color="text.secondary">
               {description}
             </Typography>
           </Stack>
-          <Stack direction="row" spacing={1} mt={1}>
+          <Stack direction="row" spacing={1} margin={1} flexWrap="wrap">
             {Object.entries(languageData).map(([lng, linesOfCode]) => (
-              <Chip
-                key={lng}
-                label={`${lng}: ${((linesOfCode / totalLinesOfCode) * 100).toFixed(2)}%`}
-                variant="outlined"
-                size="small"
-              />
+              <Box paddingTop={1}>
+                <Chip
+                  key={lng}
+                  label={`${lng}: ${((linesOfCode / totalLinesOfCode) * 100).toFixed(2)}%`}
+                  variant="outlined"
+                  size="small"
+                />
+              </Box>
             ))}
           </Stack>
-          <Stack direction="row" spacing={1} mt={1}>
+          <Stack direction="row" spacing={1} mt={1} flexWrap="wrap">
             {topics.map((topic) => (
               <Chip key={topic} label={topic} variant="outlined" size="small" />
             ))}
@@ -137,32 +139,27 @@ const RepositoryCard = ({
           </Stack>
         </Stack>
       </CardContent>
-      <CardContent>
-        <Stack direction="row">
-          <IconButton>
-            <ShareIcon />
-          </IconButton>
-          <IconButton>
-            <BookmarkIcon />
-          </IconButton>
-          <IconButton>
-            <ChatBubbleOutlineIcon />
-          </IconButton>
-          <IconButton>
-            <ThumbUpIcon />
-          </IconButton>
-          <IconButton onClick={handleClick}>
-            <MoreHorizIcon />
-          </IconButton>
-          <Button variant="text" endIcon={<ExpandCircleDownIcon />}>
-            Details
-          </Button>
-          <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-            <MenuItem onClick={handleClose}>Option 1</MenuItem>
-            <MenuItem onClick={handleClose}>Option 2</MenuItem>
-          </Menu>
-        </Stack>
-      </CardContent>
+      <CardActions disableSpacing>
+        <IconButton>
+          <ShareIcon />
+        </IconButton>
+        <IconButton>
+          <BookmarkIcon />
+        </IconButton>
+        <IconButton>
+          <ChatBubbleOutlineIcon />
+        </IconButton>
+        <IconButton>
+          <ThumbUpIcon />
+        </IconButton>
+        <IconButton onClick={handleClick}>
+          <MoreHorizIcon />
+        </IconButton>
+        <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+          <MenuItem onClick={handleClose}>Option 1</MenuItem>
+          <MenuItem onClick={handleClose}>Option 2</MenuItem>
+        </Menu>
+      </CardActions>
     </Card>
   );
 };
