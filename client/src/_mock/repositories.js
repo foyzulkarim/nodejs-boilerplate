@@ -1,6 +1,4 @@
-import Feed from './feed-cards'; // Assuming Feed is the component you want to create a story for
-
-const feedData = [
+export const repositories = [
   {
     id: 10270250,
     node_id: 'MDEwOlJlcG9zaXRvcnkxMDI3MDI1MA==',
@@ -203,15 +201,3 @@ const feedData = [
     network_count: 0,
   },
 ];
-
-export default {
-  title: 'gitstream/components/Feed',
-  component: Feed,
-  parameters: {
-    layout: 'centered',
-  },
-};
-
-export const Default = {
-  args: { items: feedData },
-};
