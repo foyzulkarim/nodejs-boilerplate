@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Stack from '@mui/material/Stack';
 
-import RepositoryCard from '../repository/repository-card';
+import RepositoryCard from './repository-card';
 
 const FeedCards = ({ items }) => (
   <Stack spacing={2}>

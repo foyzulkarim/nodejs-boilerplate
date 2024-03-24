@@ -1,3 +1,5 @@
+import RssFeedOutlinedIcon from '@mui/icons-material/RssFeedOutlined';
+
 import SvgColor from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
@@ -21,6 +23,11 @@ const navConfig = [
     title: 'product',
     path: '/products',
     icon: icon('ic_cart'),
+  },
+  {
+    title: 'feed',
+    path: '/feed',
+    icon: <RssFeedOutlinedIcon />,
   },
   {
     title: 'blog',
