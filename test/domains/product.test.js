@@ -42,7 +42,7 @@ describe('Domains.Products', () => {
       const response = await request(app).post('/api/v1/products').send({
         name: 'Sample Product',
         description: 'This is a sample product for demonstration purposes.',
-        price: 19.99,
+        price: 19,
         inStock: true,
       });
       
@@ -55,6 +55,13 @@ describe('Domains.Products', () => {
       );
       expect(productResponse.status).toBe(200);
       expect(productResponse.body).toEqual(response.body);
+    });
+
+    it('should return status 400 if the request body is invalid', async () => {
+      const response = await request(app).post('/api/v1/products').send({
+        name: 'Product without price',
+      });
+      expect(response.status).toBe(400);
     });
   });
 });

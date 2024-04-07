@@ -9,6 +9,9 @@ const {
   deleteProductById,
 } = require('./service');
 
+const { createSchema } = require('./request');
+const { validateRequest } = require('../../middlewares/request-validate');
+
 // CRUD for product entity
 const routes = () => {
   const router = express.Router();
@@ -23,7 +26,7 @@ const routes = () => {
     }
   });
 
-  router.post('/', async (req, res) => {
+  router.post('/', validateRequest(createSchema), async (req, res) => {
     logger.info('POST /api/v1/products', { body: req.body });
     const product = await createProduct(req.body);
     res.status(201).json(product);
