@@ -13,6 +13,10 @@ function defineRoutes(expressApp) {
   expressApp.get('/health', (req, res) => {
     res.status(200).send('OK');
   });
+  // 404 handler
+  expressApp.use((req, res) => {
+    res.status(404).send('Not Found');
+  });
   logger.info('Routes defined');
 }
 

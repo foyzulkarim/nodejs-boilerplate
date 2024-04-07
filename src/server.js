@@ -10,8 +10,7 @@ const { addRequestIdMiddleware } = require('./middlewares/request-context');
 
 let connection;
 
-async function startWebServer() {
-  logger.info('Starting web server...');
+const createExpressApp = () => {
   const expressApp = express();
   expressApp.use(addRequestIdMiddleware);
   expressApp.use(helmet());
@@ -27,9 +26,15 @@ async function startWebServer() {
   logger.info('Express middlewares are set up');
   defineRoutes(expressApp);
   defineErrorHandlingMiddleware(expressApp);
+  return expressApp;
+};
+
+async function startWebServer() {
+  logger.info('Starting web server...');
+  const expressApp = createExpressApp();
   const APIAddress = await openConnection(expressApp);
   logger.info(`Server is running on ${APIAddress.address}:${APIAddress.port}`);
-  return APIAddress;
+  return expressApp;
 }
 
 async function stopWebServer() {
@@ -67,4 +72,4 @@ function defineErrorHandlingMiddleware(expressApp) {
   });
 }
 
-module.exports = { startWebServer, stopWebServer }; // Use module.exports for CommonJS compatibility
+module.exports = { createExpressApp, startWebServer, stopWebServer }; // Use module.exports for CommonJS compatibility
