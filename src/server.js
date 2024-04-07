@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const http = require('http');
 const net = require('net');
 const express = require('express');
@@ -34,6 +35,7 @@ async function startWebServer() {
   const expressApp = createExpressApp();
   const APIAddress = await openConnection(expressApp);
   logger.info(`Server is running on ${APIAddress.address}:${APIAddress.port}`);
+  await connectWithMongoDb();
   return expressApp;
 }
 
@@ -67,9 +69,30 @@ function defineErrorHandlingMiddleware(expressApp) {
         error.isTrusted = true;
       }
     }
+    console.log('error', error);
+    
     errorHandler.handleError(error);
     res.status(error?.HTTPStatus || 500).end();
   });
 }
 
-module.exports = { createExpressApp, startWebServer, stopWebServer }; // Use module.exports for CommonJS compatibility
+const connectWithMongoDb = async () => {
+  const MONGODB_URI =
+    process.env.MONGODB_URI || 'mongodb://localhost:27017/express-mongoose';
+
+  logger.info('Connecting to MongoDB...');
+  mongoose.connection.once('open', () => {
+    logger.info('MongoDB connection is open');
+  });
+  mongoose.connection.on('error', (error) => {
+    logger.error('MongoDB connection error', error);
+  });
+
+  await mongoose.connect(MONGODB_URI, {
+    autoIndex: true,
+    autoCreate: true,
+  });
+  logger.info('Connected to MongoDB');
+};
+
+module.exports = { createExpressApp, startWebServer, stopWebServer };

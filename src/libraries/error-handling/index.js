@@ -1,6 +1,6 @@
 const logger = require('../log/logger');
-const http = require('http');
 const util = require('util');
+const { AppError } = require('./AppError');
 
 let httpServerRef;
 
@@ -77,21 +77,4 @@ const normalizeError = (errorToHandle) => {
   );
 };
 
-class AppError extends Error {
-  constructor(
-    name,
-    message,
-    HTTPStatus = 500,
-    isTrusted = true,
-    cause // Removed the `?` to make the 'cause' field always available
-  ) {
-    super(message);
-    this.name = name;
-    this.message = message;
-    this.HTTPStatus = HTTPStatus;
-    this.isTrusted = isTrusted;
-    this.cause = cause;
-  }
-}
-
-module.exports = { errorHandler, AppError };
+module.exports = { errorHandler };
