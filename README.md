@@ -44,6 +44,11 @@ This boilerplate repository offers a well-structured and scalable foundation for
 3. Review and customize configuration files as needed.
 4. Refer to the documentation within each folder for guidance on how to build out your application.
 
+
+**Run tests**
+
+1. Run `npm test` to execute all tests.
+
 **Community Contributions**
 
 This boilerplate aims to be a collaborative resource.  Feel free to suggest improvements, refinements, or alternative approaches via pull requests or discussions.
