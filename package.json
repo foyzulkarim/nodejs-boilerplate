@@ -27,12 +27,12 @@
     "lodash": "^4.17.21",
     "mongoose": "^8.3.0",
     "morgan": "^1.10.0",
-    "nodemon": "^3.1.0",
     "ulid": "^2.3.0",
     "winston": "^3.13.0",
     "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
+    "nodemon": "^3.1.0",
     "jest": "^29.7.0",
     "mongodb-memory-server": "^9.1.8",
     "supertest": "^6.3.4"
