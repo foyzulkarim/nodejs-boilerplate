@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "jest",
-    "test:watch": "jest --watch",
+    "test:watch": "jest --watch --verbose",
     "start": "nodemon src/start.js"
   },
   "keywords": [],

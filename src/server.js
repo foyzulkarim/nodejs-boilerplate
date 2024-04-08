@@ -69,7 +69,6 @@ function defineErrorHandlingMiddleware(expressApp) {
         error.isTrusted = true;
       }
     }
-    console.log('error', error);
     
     errorHandler.handleError(error);
     res.status(error?.HTTPStatus || 500).end();
