@@ -2,7 +2,7 @@
   "name": "nodejs-boilerplate",
   "version": "1.0.0",
   "description": "[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)",
-  "main": "index.js",
+  "main": "src/start.js",
   "directories": {
     "doc": "docs",
     "test": "test"
@@ -10,7 +10,8 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch --verbose",
-    "start": "nodemon src/start.js"
+    "start": "node src/start.js",
+    "dev":"nodemon src/start.js"
   },
   "keywords": [],
   "author": "",

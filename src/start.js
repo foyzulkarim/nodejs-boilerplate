@@ -1,13 +1,13 @@
 const { startWebServer } = require('./server');
 
 const start = async () => {
-  console.log('Hello World');
+  console.log(`Last Run: ${new Date().toLocaleString()}`);
   await startWebServer();
 };
 
 start()
   .then(() => {
-    console.log('Done');
+    console.log('✓ Server started successfully!');
   })
   .catch((error) => {
     console.error(error);
