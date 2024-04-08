@@ -1,47 +1,95 @@
 const express = require('express');
 const logger = require('../../libraries/log/logger');
+const { AppError } = require('../../libraries/error-handling/AppError');
 
 const {
   createProduct,
-  getAllProducts,
+  filterProducts,
   getProductById,
   updateProductById,
   deleteProductById,
 } = require('./service');
 
+const { createSchema, updateSchema, idSchema } = require('./request');
+const { validateRequest } = require('../../middlewares/request-validate');
+const { logRequest } = require('../../middlewares/log');
+
 // CRUD for product entity
 const routes = () => {
   const router = express.Router();
-
-  router.get('/', async (req, res, next) => {
-    logger.info('GET /api/v1/products', { query: req.query });
+  logger.info('Setting up product routes');
+  router.get('/', logRequest({}), async (req, res, next) => {
     try {
-      const products = await getAllProducts();
+      // TODO: Add pagination and filtering
+      const products = await filterProducts(req.query);
       res.json(products);
     } catch (error) {
       next(error);
     }
   });
 
-  router.post('/', async (req, res) => {
-    logger.info('POST /api/v1/products', { body: req.body });
-    const product = await createProduct(req.body);
-    res.status(201).json(product);
-  });
+  router.post(
+    '/',
+    logRequest({}),
+    validateRequest({ schema: createSchema }),
+    async (req, res, next) => {
+      try {
+        const product = await createProduct(req.body);
+        res.status(201).json(product);
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
 
-  router.get('/:id', async (req, res) => {
-    logger.info('GET /api/v1/products/:id', { params: req.params });
-    const product = await getProductById(req.params.id);
-    res.status(200).json(product);
-  });
+  router.get(
+    '/:id',
+    logRequest({}),
+    validateRequest({ schema: idSchema, isParam: true }),
+    async (req, res, next) => {
+      try {
+        const product = await getProductById(req.params.id);
+        if (!product) {
+          throw new AppError('Product not found', 'Product not found', 404);
+        }
+        res.status(200).json(product);
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
 
-  router.put('/:id', async (req, res) => {
-    res.json({ status: 'UP' });
-  });
+  router.put(
+    '/:id',
+    logRequest({}),
+    validateRequest({ schema: idSchema, isParam: true }),
+    validateRequest({ schema: updateSchema }),
+    async (req, res, next) => {
+      try {
+        const product = await updateProductById(req.params.id, req.body);
+        if (!product) {
+          throw new AppError('Product not found', 'Product not found', 404);
+        }
+        res.status(200).json(product);
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
 
-  router.delete('/:id', async (req, res) => {
-    res.json({ status: 'UP' });
-  });
+  router.delete(
+    '/:id',
+    logRequest({}),
+    validateRequest({ schema: idSchema, isParam: true }),
+    async (req, res, next) => {
+      try {
+        await deleteProductById(req.params.id);
+        res.status(204).json({ message: 'Product deleted' });
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
 
   return router;
 };
