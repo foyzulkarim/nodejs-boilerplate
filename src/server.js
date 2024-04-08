@@ -20,7 +20,7 @@ const createExpressApp = () => {
 
   expressApp.use((req, res, next) => {
     // Log an info message for each incoming request
-    logger.info(`Received a ${req.method} request for ${req.url}`);
+    logger.info(`${req.method} ${req.originalUrl}`);
     next();
   });
 

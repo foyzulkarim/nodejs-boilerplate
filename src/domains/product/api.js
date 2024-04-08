@@ -12,16 +12,16 @@ const {
 
 const { createSchema, updateSchema, idSchema } = require('./request');
 const { validateRequest } = require('../../middlewares/request-validate');
+const { logRequest } = require('../../middlewares/log');
 
 // CRUD for product entity
 const routes = () => {
   const router = express.Router();
-
-  router.get('/', async (req, res, next) => {
-    logger.info('GET /products', { query: req.query });
+  logger.info('Setting up product routes');
+  router.get('/', logRequest({}), async (req, res, next) => {
     try {
       // TODO: Add pagination and filtering
-      const products = await getAllProducts();
+      const products = await getAllProducts(req.query);
       res.json(products);
     } catch (error) {
       next(error);
@@ -30,9 +30,9 @@ const routes = () => {
 
   router.post(
     '/',
+    logRequest({}),
     validateRequest({ schema: createSchema }),
     async (req, res, next) => {
-      logger.info('POST /products', { body: req.body });
       try {
         const product = await createProduct(req.body);
         res.status(201).json(product);
@@ -44,9 +44,9 @@ const routes = () => {
 
   router.get(
     '/:id',
+    logRequest({}),
     validateRequest({ schema: idSchema, isParam: true }),
     async (req, res, next) => {
-      logger.info('GET /products/:id', { params: req.params });
       try {
         const product = await getProductById(req.params.id);
         if (!product) {
@@ -61,10 +61,10 @@ const routes = () => {
 
   router.put(
     '/:id',
+    logRequest({}),
     validateRequest({ schema: idSchema, isParam: true }),
     validateRequest({ schema: updateSchema }),
     async (req, res, next) => {
-      logger.info('PUT /products/:id', { params: req.params, body: req.body });
       try {
         const product = await updateProductById(req.params.id, req.body);
         if (!product) {
@@ -79,9 +79,9 @@ const routes = () => {
 
   router.delete(
     '/:id',
+    logRequest({}),
     validateRequest({ schema: idSchema, isParam: true }),
     async (req, res, next) => {
-      logger.info('DELETE /products/:id', { params: req.params });
       try {
         await deleteProductById(req.params.id);
         res.status(204).json({ message: 'Product deleted' });

@@ -6,7 +6,7 @@ function validateRequest({ schema, isParam = false }) {
     const validationResult = schema.validate(input, { abortEarly: false });
 
     if (validationResult.error) {
-      logger.error('Request validation failed', {
+      logger.error(`${req.method} ${req.originalUrl} Validation failed`, {
         errors: validationResult.error.details.map((detail) => detail.message),
       });
       // Handle validation error
