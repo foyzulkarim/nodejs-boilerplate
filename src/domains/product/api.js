@@ -4,7 +4,7 @@ const { AppError } = require('../../libraries/error-handling/AppError');
 
 const {
   createProduct,
-  getAllProducts,
+  filterProducts,
   getProductById,
   updateProductById,
   deleteProductById,
@@ -21,7 +21,7 @@ const routes = () => {
   router.get('/', logRequest({}), async (req, res, next) => {
     try {
       // TODO: Add pagination and filtering
-      const products = await getAllProducts(req.query);
+      const products = await filterProducts(req.query);
       res.json(products);
     } catch (error) {
       next(error);

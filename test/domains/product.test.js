@@ -1,7 +1,12 @@
 // test unknown endpoints
 const request = require('supertest');
-const logger = require('../../src/libraries/log/logger');
 const { createExpressApp } = require('../../src/server');
+
+const {
+  filterProducts,
+  createProduct,
+  deleteProductById,
+} = require('../../src/domains/product/service');
 
 let app = null;
 beforeAll(async () => {
@@ -18,6 +23,15 @@ afterAll(async () => {
 // Test API up and running
 describe('Domains.Products', () => {
   describe('API', () => {
+    const insertedIds = [];
+
+    // clean up
+    afterAll(async () => {
+      for (const id of insertedIds) {
+        await deleteProductById(id);
+      }
+    });
+
     // GET /api/v1/products
     describe('GET /api/v1/products', () => {
       it('should return status 200 and a JSON response', async () => {
@@ -39,6 +53,7 @@ describe('Domains.Products', () => {
 
         expect(response.status).toBe(201);
         expect(response.body._id).not.toBeNull();
+        insertedIds.push(response.body._id);
 
         // fetch product from database
         const productResponse = await request(app).get(
@@ -132,6 +147,8 @@ describe('Domains.Products', () => {
         expect(updateResponse.body.price).toBe(29);
         expect(updateResponse.body.inStock).toBe(false);
 
+        insertedIds.push(updateResponse.body._id);
+
         // fetch product from database via GET /products/:id
         const productResponse = await request(app).get(
           `/api/v1/products/${createResponse.body._id}`
@@ -176,6 +193,69 @@ describe('Domains.Products', () => {
         );
         expect(productResponse.status).toBe(404);
       });
+    });
+  });
+
+  describe('Service', () => {
+    // setup products
+    const products = [
+      {
+        name: 'Product 1',
+        description: 'Product 1 description',
+        price: 10,
+        inStock: true,
+      },
+      {
+        name: 'Product 2',
+        description: 'Product 2 description',
+        price: 20,
+        inStock: true,
+      },
+      {
+        name: 'Product 3',
+        description: 'Product 3 description',
+        price: 30,
+        inStock: false,
+      },
+    ];
+    const productIds = [];
+
+    // create products and store the ids in an array
+    beforeAll(async () => {
+      for (const product of products) {
+        const createdProduct = await createProduct(product);
+        productIds.push(createdProduct._id);
+      }
+    });
+
+    // clean up
+    afterAll(async () => {
+      for (const id of productIds) {
+        await deleteProductById(id);
+      }
+    });
+
+    // filterProducts returns all products when no keyword filter is provided
+    it('should return all products when no keyword filter is provided', async () => {
+      const result = await filterProducts();
+      expect(result.length).toBe(products.length);
+    });
+    // filterProducts filters products by keyword in the name field (case-insensitive)
+    it('should filter products by keyword in the name field (case-insensitive)', async () => {
+      const result = await filterProducts({ keyword: 'product 1' });
+      expect(result.length).toBe(1);
+      expect(result[0].name).toBe('Product 1');
+    });
+    // filterProducts filters products by keyword in the description field (case-insensitive)
+    it('should filter products by keyword in the description field (case-insensitive)', async () => {
+      const result = await filterProducts({ keyword: 'description' });
+      expect(result.length).toBe(products.length);
+    });
+    // filterProducts filters products with keywords matching both name and description fields
+    it('should filter products with keywords matching both name and description fields', async () => {
+      const result = await filterProducts({ keyword: 'product 3 description' });
+      expect(result.length).toBe(1);
+      expect(result[0].name).toBe('Product 3');
     });
   });
 });

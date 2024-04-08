@@ -17,9 +17,9 @@ const createProduct = async (data) => {
 };
 
 // Get all products
-const getAllProducts = async (query) => {
+const filterProducts = async (query) => {
   try {
-    const { keyword } = query;
+    const { keyword } = query ?? {};
     // search by keyword on name and description fields
     const filter = {};
     if (keyword) {
@@ -78,7 +78,7 @@ const deleteProductById = async (id) => {
 
 module.exports = {
   createProduct,
-  getAllProducts,
+  filterProducts,
   getProductById,
   updateProductById,
   deleteProductById,
