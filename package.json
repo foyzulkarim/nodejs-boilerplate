@@ -10,7 +10,8 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch --verbose",
-    "start": "nodemon src/start.js"
+    "start": "nodemon src/start.js",
+    "create-domain": "zx scripts/dev/domain-generator.js"
   },
   "keywords": [],
   "author": "",
@@ -35,6 +36,7 @@
   "devDependencies": {
     "jest": "^29.7.0",
     "mongodb-memory-server": "^9.1.8",
-    "supertest": "^6.3.4"
+    "supertest": "^6.3.4",
+    "zx": "^8.0.1"
   }
 }

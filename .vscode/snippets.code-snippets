@@ -1,0 +1,15 @@
+{
+	"Domain index file": {
+		"prefix": "nbp-di",
+		"body": [
+			"const { routes } = require('./api');",
+			"",
+			"const defineRoutes = (expressRouter) => {",
+			"  expressRouter.use('/${1:route}', routes());",
+			"};",
+			"",
+			"module.exports = defineRoutes;"
+		],
+		"description": "Nodejs boilerplate domain's index file"
+	},
+}
