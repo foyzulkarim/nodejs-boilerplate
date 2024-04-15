@@ -3,9 +3,9 @@ const request = require('supertest');
 const { createExpressApp } = require('../../src/server');
 
 const {
-  filterProducts,
-  createProduct,
-  deleteProductById,
+  search,
+  create,
+  deleteById,
 } = require('../../src/domains/product/service');
 
 let app = null;
@@ -28,7 +28,7 @@ describe('Domains.Products', () => {
     // clean up
     afterAll(async () => {
       for (const id of insertedIds) {
-        await deleteProductById(id);
+        await deleteById(id);
       }
     });
 
@@ -223,7 +223,7 @@ describe('Domains.Products', () => {
     // create products and store the ids in an array
     beforeAll(async () => {
       for (const product of products) {
-        const createdProduct = await createProduct(product);
+        const createdProduct = await create(product);
         productIds.push(createdProduct._id);
       }
     });
@@ -231,29 +231,29 @@ describe('Domains.Products', () => {
     // clean up
     afterAll(async () => {
       for (const id of productIds) {
-        await deleteProductById(id);
+        await deleteById(id);
       }
     });
 
-    // filterProducts returns all products when no keyword filter is provided
+    // search returns all products when no keyword filter is provided
     it('should return all products when no keyword filter is provided', async () => {
-      const result = await filterProducts();
+      const result = await search();
       expect(result.length).toBe(products.length);
     });
-    // filterProducts filters products by keyword in the name field (case-insensitive)
+    // search filters products by keyword in the name field (case-insensitive)
     it('should filter products by keyword in the name field (case-insensitive)', async () => {
-      const result = await filterProducts({ keyword: 'product 1' });
+      const result = await search({ keyword: 'product 1' });
       expect(result.length).toBe(1);
       expect(result[0].name).toBe('Product 1');
     });
-    // filterProducts filters products by keyword in the description field (case-insensitive)
+    // search filters products by keyword in the description field (case-insensitive)
     it('should filter products by keyword in the description field (case-insensitive)', async () => {
-      const result = await filterProducts({ keyword: 'description' });
+      const result = await search({ keyword: 'description' });
       expect(result.length).toBe(products.length);
     });
-    // filterProducts filters products with keywords matching both name and description fields
+    // search filters products with keywords matching both name and description fields
     it('should filter products with keywords matching both name and description fields', async () => {
-      const result = await filterProducts({ keyword: 'product 3 description' });
+      const result = await search({ keyword: 'product 3 description' });
       expect(result.length).toBe(1);
       expect(result[0].name).toBe('Product 3');
     });
