@@ -3,16 +3,12 @@ const mongoose = require('mongoose');
 
 const createSchema = Joi.object().keys({
   name: Joi.string().required(),
-  price: Joi.number().required(),
-  description: Joi.string().optional(),
-  inStock: Joi.boolean().optional(),
+  // other properties
 });
 
 const updateSchema = Joi.object().keys({
   name: Joi.string(),
-  price: Joi.number(),
-  description: Joi.string(),
-  inStock: Joi.boolean(),
+  // other properties
 });
 
 const idSchema = Joi.object().keys({

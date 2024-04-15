@@ -1,26 +1,27 @@
 const logger = require('../../libraries/log/logger');
 
-const Product = require('./schema');
+const Model = require('./schema');
 const { AppError } = require('../../libraries/error-handling/AppError');
 
-// Create a new product
-const createProduct = async (data) => {
+const model = 'product';
+
+const create = async (data) => {
   try {
-    const product = new Product(data);
-    const savedProduct = await product.save();
-    logger.info('createProduct(): Product created', { id: savedProduct._id });
-    return savedProduct;
+    const item = new Model(data);
+    const saved = await item.save();
+    logger.info(`create(): ${model} created`, {
+      id: saved._id,
+    });
+    return saved;
   } catch (error) {
-    logger.error('createProduct(): Failed to create product', error);
-    throw new AppError('Failed to create product', error.message);
+    logger.error(`create(): Failed to create ${model}`, error);
+    throw new AppError(`Failed to create ${model}`, error.message);
   }
 };
 
-// Get all products
-const filterProducts = async (query) => {
+const search = async (query) => {
   try {
     const { keyword } = query ?? {};
-    // search by keyword on name and description fields
     const filter = {};
     if (keyword) {
       filter.$or = [
@@ -28,58 +29,55 @@ const filterProducts = async (query) => {
         { description: { $regex: keyword, $options: 'i' } },
       ];
     }
-    const products = await Product.find(filter);
-    logger.info('getAllProducts(): Products fetched', {
+    const items = await Model.find(filter);
+    logger.info('search(): filter and count', {
       filter,
-      count: products.length,
+      count: items.length,
     });
-    return products;
+    return items;
   } catch (error) {
-    logger.error('getAllProducts(): Failed to get products', error);
-    throw new AppError('Failed to get products', error.message, 400);
+    logger.error(`search(): Failed to search ${model}`, error);
+    throw new AppError(`Failed to search ${model}`, error.message, 400);
   }
 };
 
-// Get a product by ID
-const getProductById = async (id) => {
+const getById = async (id) => {
   try {
-    const product = await Product.findById(id);
-    logger.info('getProductById(): Product fetched', { id });
-    return product;
+    const item = await Model.findById(id);
+    logger.info(`getById(): ${model} fetched`, { id });
+    return item;
   } catch (error) {
-    logger.error('getProductById(): Failed to get product', error);
-    throw new AppError('Failed to get product', error.message);
+    logger.error(`getById(): Failed to get ${model}`, error);
+    throw new AppError(`Failed to get ${model}`, error.message);
   }
 };
 
-// Update a product by ID
-const updateProductById = async (id, data) => {
+const updateById = async (id, data) => {
   try {
-    const product = await Product.findByIdAndUpdate(id, data, { new: true });
-    logger.info('updateProductById(): Product updated', { id });
-    return product;
+    const item = await Model.findByIdAndUpdate(id, data, { new: true });
+    logger.info(`updateById(): ${model} updated`, { id });
+    return item;
   } catch (error) {
-    logger.error('updateProductById(): Failed to update product', error);
-    throw new AppError('Failed to update product', error.message);
+    logger.error(`updateById(): Failed to update ${model}`, error);
+    throw new AppError(`Failed to update ${model}`, error.message);
   }
 };
 
-// Delete a product by ID
-const deleteProductById = async (id) => {
+const deleteById = async (id) => {
   try {
-    await Product.findByIdAndDelete(id);
-    logger.info('deleteProductById(): Product deleted', { id });
+    await Model.findByIdAndDelete(id);
+    logger.info(`deleteById(): ${model} deleted`, { id });
     return true;
   } catch (error) {
-    logger.error('deleteProductById(): Failed to delete product', error);
-    throw new AppError('Failed to delete product', error.message);
+    logger.error(`deleteById(): Failed to delete ${model}`, error);
+    throw new AppError(`Failed to delete ${model}`, error.message);
   }
 };
 
 module.exports = {
-  createProduct,
-  filterProducts,
-  getProductById,
-  updateProductById,
-  deleteProductById,
+  create,
+  search,
+  getById,
+  updateById,
+  deleteById,
 };
