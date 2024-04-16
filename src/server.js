@@ -3,8 +3,12 @@ const http = require('http');
 const net = require('net');
 const express = require('express');
 const helmet = require('helmet');
-const defineRoutes = require('./app');
 
+const loadAndValidateConfig = require('./configs'); // Assuming 'config.js' is in the same directory
+
+const env = process.env.NODE_ENV || 'development';
+const config = loadAndValidateConfig(env);
+const defineRoutes = require('./app');
 const { errorHandler } = require('./libraries/error-handling');
 const logger = require('./libraries/log/logger');
 const { addRequestIdMiddleware } = require('./middlewares/request-context');

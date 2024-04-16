@@ -1,0 +1,10 @@
+{
+  "MONGODB_URI": {
+    "required": true, 
+    "value": "mongodb://localhost:27017/mydatabase" 
+  },
+  "RATE": {
+    "required": false,
+    "value": 100
+  }
+}
