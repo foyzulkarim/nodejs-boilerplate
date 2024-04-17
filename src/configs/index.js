@@ -3,10 +3,16 @@ const fs = require("fs");
 
 function loadAndValidateConfig(environment) {
   // Load environment variables (relative path goes one level up)
-  dotenv.config({ path: `../.env.${environment}` });
+  const envPath = `../.env.${environment}`;
+  if (!fs.existsSync(envPath)) {
+    throw new Error(`Environment file not found: ${envPath}`);
+  }
 
   // 2. Load config file
   const configFile = `config.${environment}.json`;
+  if (!fs.existsSync(configFile)) {
+    throw new Error(`Config file not found: ${configFile}`);
+  }
   let config = JSON.parse(fs.readFileSync(configFile));
 
   // 3. Check for missing required values
