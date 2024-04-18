@@ -1,0 +1,13 @@
+{
+  "MONGODB_URI": {
+    "required": true
+  },
+  "RATE": {
+    "required": false,
+    "value": 100
+  },
+  "PORT": {
+    "required": false,
+    "value": 4000
+  }
+}

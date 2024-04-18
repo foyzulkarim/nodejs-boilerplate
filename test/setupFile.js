@@ -1,21 +1,19 @@
-const { beforeAll, afterAll } = require('@jest/globals');
-const mongoose = require('mongoose');
+const { beforeAll, afterAll } = require("@jest/globals");
+const mongoose = require("mongoose");
+const { connectWithMongoDb, disconnectWithMongoDb } = require("../src/libraries/db");
 
 beforeAll(async () => {
-  await mongoose.connect(process.env.MONGODB_URL, {
-    autoIndex: true,
-    autoCreate: true,
-  });
+  await connectWithMongoDb();
 });
 
 afterAll(async () => {
-  await mongoose.connection.close();
+  await disconnectWithMongoDb();
 });
 
 // test mongoose connection is open
 
-describe('Mongoose connection', () => {
-  it('should be open', () => {
+describe("Mongoose connection", () => {
+  it("should be open", () => {
     expect(mongoose.connection.readyState).toBe(1);
   });
 });

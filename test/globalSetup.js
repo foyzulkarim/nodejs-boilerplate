@@ -5,9 +5,10 @@ module.exports = async function globalSetup() {
   const instance = await MongoMemoryServer.create({
     instance: {
       dbName: 'testdb',
+      port: 27018,
     },
   });
-  const uri = instance.getUri();
   global.__MONGOINSTANCE = instance;
-  process.env.MONGODB_URL = uri.slice(0, uri.lastIndexOf('/'));
+  // const uri = instance.getUri();
+  // process.env.MONGODB_URL = uri.slice(0, uri.lastIndexOf('/'));
 };

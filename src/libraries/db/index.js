@@ -21,5 +21,11 @@ const connectWithMongoDb = async () => {
   logger.info("Connected to MongoDB");
 };
 
+const disconnectWithMongoDb = async () => {
+  logger.info("Disconnecting from MongoDB...");
+  await mongoose.disconnect();
+  logger.info("Disconnected from MongoDB");
+}
 
-module.exports = { connectWithMongoDb };
+
+module.exports = { connectWithMongoDb, disconnectWithMongoDb };
