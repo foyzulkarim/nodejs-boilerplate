@@ -1,13 +1,12 @@
-const mongoose = require('mongoose');
-const http = require('http');
-const net = require('net');
-const express = require('express');
-const helmet = require('helmet');
-const defineRoutes = require('./app');
+const config = require("./configs");
+const express = require("express");
+const helmet = require("helmet");
 
-const { errorHandler } = require('./libraries/error-handling');
-const logger = require('./libraries/log/logger');
-const { addRequestIdMiddleware } = require('./middlewares/request-context');
+const defineRoutes = require("./app");
+const { errorHandler } = require("./libraries/error-handling");
+const logger = require("./libraries/log/logger");
+const { addRequestIdMiddleware } = require("./middlewares/request-context");
+const { connectWithMongoDb } = require("./libraries/db");
 
 let connection;
 
@@ -24,14 +23,14 @@ const createExpressApp = () => {
     next();
   });
 
-  logger.info('Express middlewares are set up');
+  logger.info("Express middlewares are set up");
   defineRoutes(expressApp);
   defineErrorHandlingMiddleware(expressApp);
   return expressApp;
 };
 
 async function startWebServer() {
-  logger.info('Starting web server...');
+  logger.info("Starting web server...");
   const expressApp = createExpressApp();
   const APIAddress = await openConnection(expressApp);
   logger.info(`Server is running on ${APIAddress.address}:${APIAddress.port}`);
@@ -51,7 +50,7 @@ async function stopWebServer() {
 
 async function openConnection(expressApp) {
   return new Promise((resolve) => {
-    const webServerPort = process.env.PORT || 4000;
+    const webServerPort = config.PORT;
     logger.info(`Server is about to listen to port ${webServerPort}`);
 
     connection = expressApp.listen(webServerPort, () => {
@@ -64,34 +63,15 @@ async function openConnection(expressApp) {
 function defineErrorHandlingMiddleware(expressApp) {
   expressApp.use(async (error, req, res, next) => {
     // Note: next is required for Express error handlers
-    if (error && typeof error === 'object') {
+    if (error && typeof error === "object") {
       if (error.isTrusted === undefined || error.isTrusted === null) {
         error.isTrusted = true;
       }
     }
-    
+
     errorHandler.handleError(error);
     res.status(error?.HTTPStatus || 500).end();
   });
 }
-
-const connectWithMongoDb = async () => {
-  const MONGODB_URI =
-    process.env.MONGODB_URI || 'mongodb://localhost:27017/express-mongoose';
-
-  logger.info('Connecting to MongoDB...');
-  mongoose.connection.once('open', () => {
-    logger.info('MongoDB connection is open');
-  });
-  mongoose.connection.on('error', (error) => {
-    logger.error('MongoDB connection error', error);
-  });
-
-  await mongoose.connect(MONGODB_URI, {
-    autoIndex: true,
-    autoCreate: true,
-  });
-  logger.info('Connected to MongoDB');
-};
 
 module.exports = { createExpressApp, startWebServer, stopWebServer };
