@@ -68,7 +68,13 @@ class Config {
     }
     return validatedConfig;
   }
+
+  static getInstance() {
+    if (!Config.instance) {
+      new Config();
+    }
+    return Config.instance;
+  }
 }
 
-const instance = new Config();
-module.exports = instance.config;
+module.exports = Config.getInstance().config;
