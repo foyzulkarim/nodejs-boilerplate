@@ -125,5 +125,7 @@ dist
 # ignore .env and config.{}.json files
 .env.development
 .env.production
+.env.test
 config.development.json
 config.production.json
+config.test.json

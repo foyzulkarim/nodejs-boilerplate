@@ -1,14 +1,6 @@
 {
-  "MONGODB_URI": {
-    "required": true, 
-    "value": "mongodb://localhost:27017/mydatabase" 
-  },
-  "RATE": {
-    "required": false,
-    "value": 100
-  },
-  "PORT": {
-    "required": false,
-    "value": 4000
-  }
+  "NODE_ENV": "development",
+  "MONGODB_URI": "mongodb://localhost:27017/mydatabase",
+  "RATE": 40,
+  "PORT": 4000
 }

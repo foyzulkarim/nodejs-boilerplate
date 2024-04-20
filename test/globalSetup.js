@@ -9,6 +9,4 @@ module.exports = async function globalSetup() {
     },
   });
   global.__MONGOINSTANCE = instance;
-  // const uri = instance.getUri();
-  // process.env.MONGODB_URL = uri.slice(0, uri.lastIndexOf('/'));
 };

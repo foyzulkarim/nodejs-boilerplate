@@ -1,6 +1,7 @@
 const dotenv = require("dotenv");
 const fs = require("fs");
 const path = require("path");
+const schema = require("./config.schema");
 
 function loadAndValidateConfig() {
   const environment = process.env.NODE_ENV || "development";
@@ -24,25 +25,34 @@ function loadAndValidateConfig() {
 
   let config = JSON.parse(fs.readFileSync(configFile));
 
-  // 3. Check for missing required values
-  const missingParams = Object.entries(config)
-    .filter(([key, obj]) => {
-      return obj.required && !process.env[key] && !obj.value;
-    })
-    .map(([key, obj]) => key);
+  const sharedConfigFile = path.join(__dirname, "config.shared.json");
+  if (fs.existsSync(sharedConfigFile)) {
+    const sharedConfig = JSON.parse(fs.readFileSync(sharedConfigFile));
+    config = { ...sharedConfig, ...config };
+  }
 
-  if (missingParams.length > 0) {
+  const finalConfig = {};
+  for (const key in schema.describe().keys) {
+    if (process.env.hasOwnProperty(key)) {
+      finalConfig[key] = process.env[key]; // Prioritize environment variables
+    } else if (config.hasOwnProperty(key)) {
+      finalConfig[key] = config[key]; // Fallback to config file value
+    }
+  }
+
+  // 4. load the schema file
+  if (!schema) {
+    throw new Error(`Schema file not found`);
+  }
+
+  const { error, value: validatedConfig } = schema.validate(finalConfig);
+  if (error) {
+    const missingProperties = error.details.map((detail) => detail.path[0]);
     throw new Error(
-      `Missing required configuration values: ${missingParams.join(", ")}`,
+      `Config validation error: missing properties ${missingProperties}`,
     );
   }
-
-  // 4. Prepare final config (prioritize env vars)
-  for (const [key, obj] of Object.entries(config)) {
-    config[key] = process.env[key] || obj.value;
-  }
-
-  return config;
+  return validatedConfig;
 }
 
 module.exports = { config: loadAndValidateConfig() };
