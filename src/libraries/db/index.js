@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const logger = require("../log/logger");
 
-const { config } = require("../../configs/index");
+const config = require("../../configs");
 
 const connectWithMongoDb = async () => {
   const MONGODB_URI = config.MONGODB_URI;
@@ -25,7 +25,6 @@ const disconnectWithMongoDb = async () => {
   logger.info("Disconnecting from MongoDB...");
   await mongoose.disconnect();
   logger.info("Disconnected from MongoDB");
-}
-
+};
 
 module.exports = { connectWithMongoDb, disconnectWithMongoDb };

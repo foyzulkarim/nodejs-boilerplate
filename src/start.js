@@ -1,7 +1,6 @@
 const { startWebServer } = require('./server');
 
 const start = async () => {
-  console.log('Hello World');
   await startWebServer();
 };
 
