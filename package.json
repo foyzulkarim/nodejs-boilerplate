@@ -17,7 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "compression": "^1.7.4",
+    "compression": "^1.8.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "cron": "^3.1.6",
@@ -27,7 +27,7 @@
     "joi": "^17.12.3",
     "lodash": "^4.17.21",
     "mongoose": "^8.3.0",
-    "morgan": "^1.10.0",
+    "morgan": "^1.10.1",
     "nodemon": "^3.1.0",
     "ulid": "^2.3.0",
     "winston": "^3.13.0",
